@@ -52,6 +52,6 @@ else:
 if (player_input == 0 and computer_choice == 2 or player_input == 1 and computer_choice == 0 or player_input == 2 and computer_choice == 1):
     print("You Win.")
 elif(player_input == computer_choice):
-    print("Tie.")
+    print("It's a draw.")
 else:
     print("You Lose.")
