@@ -98,16 +98,16 @@ while repeat_flag:
     print(f"Your final hand: {user_cards}, final score: {user_card_sum}")
     print(f"Computer's final hand: {computer_cards}, final score: {computer_card_sum}")
     
-    if user_blackjack:
-        print("Win with a Blackjack 😎")
+    if user_card_sum == computer_card_sum:
+        print("Draw 🙃")
     elif opponent_blackjack:
         print("Lose, opponent has Blackjack 😱")
+    elif user_blackjack:
+        print("Win with a Blackjack 😎")
     elif user_card_sum > 21:
         print("You went over. You lose 😭")
     elif computer_card_sum > 21:
         print("Opponent went over. You win 😁")
-    elif user_card_sum == computer_card_sum:
-        print("Draw 🙃")
     elif user_card_sum > computer_card_sum:
         print("You win 😃")
     elif computer_card_sum > user_card_sum:
