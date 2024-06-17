@@ -37,7 +37,7 @@ while repeat_flag:
     os.system("cls||clear")
     print(art.logo)
     
-    choice_A = random.choice(gamedata.data)
+    choice_A = choice_B
     choice_B = random.choice(gamedata.data)
     print(f"You're right! Current score: {score}.")
     print(f"Compare A: {choice_A.get('name')}, a {choice_A.get('description')}, from {choice_A.get('country')}.")
