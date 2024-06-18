@@ -13,7 +13,7 @@ choice_B = random.choice(gamedata.data)
 score = 0
 
 def choice_comparision():
-    global repeat_flag, choice_A, choice_B, score
+    global repeat_flag, choice_A, choice_B, score, user_choice
     
     if user_choice == "A":
         if choice_A["follower_count"] > choice_B["follower_count"]:
