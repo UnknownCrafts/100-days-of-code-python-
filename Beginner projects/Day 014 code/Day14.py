@@ -24,6 +24,8 @@ if user_choice == "A":
         score += 1
         repeat_flag = True
         choice_B = random.choice(gamedata.data)
+        while choice_A == choice_B:
+            choice_B = random.choice(gamedata.data)
     else:
         repeat_flag = False
 else:
@@ -32,6 +34,8 @@ else:
         repeat_flag = True
         choice_A = choice_B
         choice_B = random.choice(gamedata.data)
+        while choice_A == choice_B:
+            choice_B = random.choice(gamedata.data)
     else:
         repeat_flag = False
 
@@ -52,6 +56,8 @@ while repeat_flag:
             score += 1
             repeat_flag = True
             choice_B = random.choice(gamedata.data)
+            while choice_A == choice_B:
+                choice_B = random.choice(gamedata.data)
         else:
             repeat_flag = False
     else:
@@ -60,6 +66,8 @@ while repeat_flag:
             repeat_flag = True
             choice_A = choice_B
             choice_B = random.choice(gamedata.data)
+            while choice_A == choice_B:
+                choice_B = random.choice(gamedata.data)
         else:
             repeat_flag = False
 
