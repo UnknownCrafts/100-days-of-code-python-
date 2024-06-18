@@ -23,12 +23,15 @@ if user_choice == "A":
     if choice_A["follower_count"] > choice_B["follower_count"]:
         score += 1
         repeat_flag = True
+        choice_B = random.choice(gamedata.data)
     else:
         repeat_flag = False
 else:
     if choice_B["follower_count"] > choice_A["follower_count"]:
         score += 1
         repeat_flag = True
+        choice_A = choice_B
+        choice_B = random.choice(gamedata.data)
     else:
         repeat_flag = False
 
@@ -36,9 +39,6 @@ while repeat_flag:
     
     os.system("cls||clear")
     print(art.logo)
-    
-    choice_A = choice_B
-    choice_B = random.choice(gamedata.data)
     print(f"You're right! Current score: {score}.")
     print(f"Compare A: {choice_A.get('name')}, a {choice_A.get('description')}, from {choice_A.get('country')}.")
     print("")
@@ -51,12 +51,15 @@ while repeat_flag:
         if choice_A["follower_count"] > choice_B["follower_count"]:
             score += 1
             repeat_flag = True
+            choice_B = random.choice(gamedata.data)
         else:
             repeat_flag = False
     else:
         if choice_B["follower_count"] > choice_A["follower_count"]:
             score += 1
             repeat_flag = True
+            choice_A = choice_B
+            choice_B = random.choice(gamedata.data)
         else:
             repeat_flag = False
 
