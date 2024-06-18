@@ -1,4 +1,5 @@
 # Text based coin operated coffee machine
+import art
 
 MENU = {
     "espresso": {
@@ -126,6 +127,7 @@ def check_input(input):
                 resources["coffee"] = current_coffee - required_coffee
                 print("Here is your cappuccino ☕️. Enjoy!")
 
+print(art.logo)
 while repeating_flag:
     
     user_input = input("What would you like (espresso/latte/cappucino): ").lower().strip()
