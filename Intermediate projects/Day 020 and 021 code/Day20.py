@@ -1,7 +1,10 @@
 # snake game using turtle
+# Day 21 was mostly adding scoreboard and food etc
 
 from turtle import Screen
 from snake import Snake
+from food import Food
+from scoreboard import Scoreboard
 import time
 
 screen = Screen()
@@ -13,7 +16,9 @@ screen.title("Snake Game")
 screen.listen()
 game_is_on = True
 
-snake = Snake(5) 
+snake = Snake()
+food = Food()
+scoreboard = Scoreboard()
 
 while game_is_on:
     
@@ -21,7 +26,7 @@ while game_is_on:
     time.sleep(0.1)
     
     snake.move()
-    if snake.check_collision():
+    if snake.check_collision(food, scoreboard):
         game_is_on = False
     
     screen.onkeypress(snake.go_north, "w")
@@ -33,6 +38,6 @@ while game_is_on:
     screen.onkeypress(snake.go_south, "s")
     screen.onkeypress(snake.go_south, "Down")
 
-
+scoreboard.game_over()
 
 screen.exitonclick()

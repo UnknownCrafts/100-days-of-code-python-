@@ -14,7 +14,6 @@ class Snake:
         
         for i in range(self.length):
             snake_body = Turtle()
-            snake_body.heading
             snake_body.penup()
             snake_body.shape("square")
             snake_body.color("white")
@@ -22,6 +21,15 @@ class Snake:
             snake_body.goto(self.x_offset, 0)
             self.x_offset -= 20
         self.head = self.snake_segments[0]
+        self.head.color("green")
+    
+    def increase_length(self):
+        snake_body = Turtle()
+        snake_body.penup()
+        snake_body.shape("square")
+        snake_body.color("white")
+        snake_body.goto(self.snake_segments[-1].position())
+        self.snake_segments.append(snake_body)
         
     def move(self):
         
@@ -31,9 +39,17 @@ class Snake:
             self.snake_segments[segment].goto(new_x, new_y)
         self.head.forward(20)
     
-    def check_collision(self):
-        for i in range(1, self.length):
-            if self.head.distance(self.snake_segments[i]) <= 1 or self.head.xcor() > 280 or self.head.xcor() < -300 or self.head.ycor() > 300 or self.head.ycor() < -280:
+    def check_collision(self, food, scoreboard):
+        if self.head.distance(food) <= 15:
+                self.increase_length()
+                food.random_pos()
+                scoreboard.increase_score()
+        
+        if self.head.xcor() > 295 or self.head.xcor() < -300 or self.head.ycor() > 299 or self.head.ycor() < -295:
+            return True
+            
+        for segment in self.snake_segments[1:]:
+            if self.head.distance(segment) <= 10:
                 return True
     
     def go_north(self):
