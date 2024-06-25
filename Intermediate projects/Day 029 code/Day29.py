@@ -27,7 +27,7 @@ def save():
     password = password_input.get()
     messagebox_message = "These are the details that are entered: \nEmail: " + email + "\nPassword: " + password + "\nIs it ok to save?"
     
-    if len(website.strip()) == 0 or len(password.strip() == 0 or len(email.strip()) == 0):
+    if len(website.strip()) == 0 or len(password.strip()) == 0 or len(email.strip()) == 0:
         messagebox.showinfo(title="Oops", message="Please don't leave any fields empty!")
     else:
         answer = messagebox.askokcancel(title=website, message=messagebox_message)
