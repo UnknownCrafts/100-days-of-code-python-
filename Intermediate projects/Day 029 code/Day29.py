@@ -2,9 +2,22 @@
 
 from tkinter import *
 from tkinter import messagebox
+import random
+import string
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
+def generate():
+    letter_list = string.ascii_letters + string.digits + '!@#$%^&*()_'
 
+    password_length = random.randint(10, 15)
+    password = [random.choice(letter_list) for char in range(password_length + 1)]
+
+    random.shuffle(password)
+    password = "".join(password)
+    
+    password_input.delete(0, END)
+    password_input.insert(0,password)
+    
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
     website = website_input.get()
@@ -21,6 +34,7 @@ def save():
                 file.write(website + " | " + email + " | " + password + "\n")
             website_input.delete(0, END)
             password_input.delete(0, END)
+            
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
@@ -54,7 +68,7 @@ password_label.grid(column=0, row=3)
 password_input = Entry(width=21, justify="left")
 password_input.grid(column=1, row=3, padx=12)
 
-generate_pass_button = Button(text="Generate Password", width=11)
+generate_pass_button = Button(text="Generate Password", width=11, command=generate)
 generate_pass_button.grid(column=2, row=3)
 
 add_button = Button(text="Add", width=36, command=save)
