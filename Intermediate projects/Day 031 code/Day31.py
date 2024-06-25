@@ -1,4 +1,4 @@
-# Python password manager using tkinter shifting to using json instead of txt files
+# Python password manager using tkinter, shifting to using json instead of txt files for saving data
 
 from tkinter import *
 from tkinter import messagebox
@@ -39,7 +39,7 @@ def save():
         answer = messagebox.askokcancel(title=website, message=messagebox_message)
         if answer:
             with open("data.json", mode="w") as file:
-                json.dump(new_data, file)
+                json.dump(new_data, file, indent=4)
             website_input.delete(0, END)
             password_input.delete(0, END)
             
