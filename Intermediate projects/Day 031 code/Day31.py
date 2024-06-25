@@ -23,9 +23,9 @@ def generate():
     
 # ---------------------------- SAVE PASSWORD ------------------------------- #
 def save():
-    website = website_input.get()
-    email = email_input.get()
-    password = password_input.get()
+    website = website_input.get().strip()
+    email = email_input.get().strip()
+    password = password_input.get().strip()
     new_data = {website: {
                     "email": email,
                     "password": password,
@@ -33,7 +33,7 @@ def save():
         }
     messagebox_message = "These are the details that are entered: \nEmail: " + email + "\nPassword: " + password + "\nIs it ok to save?"
     
-    if len(website.strip()) == 0 or len(password.strip()) == 0 or len(email.strip()) == 0:
+    if len(website) == 0 or len(password) == 0 or len(email) == 0:
         messagebox.showinfo(title="Oops", message="Please don't leave any fields empty!")
         
     else:
@@ -54,7 +54,31 @@ def save():
             finally:
                 website_input.delete(0, END)
                 password_input.delete(0, END)
+
+
+
+# ---------------------------- RETRIEVE PASSWORD ------------------------------- #
+def find_password():
+    website = website_input.get().strip()
+    
+    try:
+        with open("data.json", "r") as file:
+            data = json.load(file)
+            website_data = data[website]
             
+    except FileNotFoundError:
+        messagebox.showinfo(title="Oops", message="No Data File Found")
+        
+    except KeyError:
+        messagebox.showinfo(title="Oops", message="No details for the website exists")
+    
+    else:
+        message_data = "Email: " + website_data["email"] + "\nPassword: " + website_data["password"]
+        pyperclip.copy(website_data["password"])
+        messagebox.showinfo(title=website, message=message_data)
+        
+
+
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
@@ -71,14 +95,14 @@ canvas.grid(column=1, row=0)
 website_label = Label(text="Website:")
 website_label.grid(column=0, row=1)
 
-website_input = Entry(width=35, justify="left")
-website_input.grid(column=1, row=1, columnspan=2)
+website_input = Entry(width=21, justify="left")
+website_input.grid(column=1, row=1)
 website_input.focus()
 
 email_label = Label(text="Email/Username:")
 email_label.grid(column=0, row=2)
 
-email_input = Entry(width=35, justify="left")
+email_input = Entry(width=36, justify="left")
 email_input.grid(column=1, row=2, columnspan=2)
 email_input.insert(0, "dummy@email.com")
 
@@ -87,6 +111,9 @@ password_label.grid(column=0, row=3)
 
 password_input = Entry(width=21, justify="left")
 password_input.grid(column=1, row=3, padx=12)
+
+search_button = Button(text="Search", width=11, command=find_password)
+search_button.grid(column=2, row=1)
 
 generate_pass_button = Button(text="Generate Password", width=11, command=generate)
 generate_pass_button.grid(column=2, row=3)
