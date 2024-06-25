@@ -35,13 +35,25 @@ def save():
     
     if len(website.strip()) == 0 or len(password.strip()) == 0 or len(email.strip()) == 0:
         messagebox.showinfo(title="Oops", message="Please don't leave any fields empty!")
+        
     else:
+        
         answer = messagebox.askokcancel(title=website, message=messagebox_message)
+        
         if answer:
-            with open("data.json", mode="w") as file:
-                json.dump(new_data, file, indent=4)
-            website_input.delete(0, END)
-            password_input.delete(0, END)
+            try:
+                with open("data.json", mode="r") as file:
+                    data = json.load(file)
+            except:
+                with open("data.json", mode="w") as file:
+                    json.dump(new_data, file, indent=4)
+            else:
+                data.update(new_data)
+                with open("data.json", mode="w") as file:
+                    json.dump(data, file, indent=4)
+            finally:
+                website_input.delete(0, END)
+                password_input.delete(0, END)
             
 # ---------------------------- UI SETUP ------------------------------- #
 
