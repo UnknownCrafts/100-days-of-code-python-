@@ -1,124 +1,81 @@
-# Python password manager using tkinter, shifting to using json instead of txt files for saving data
+#Flash card app using tkinter
 
 from tkinter import *
-from tkinter import messagebox
+import pandas
 import random
-import string
-import pyperclip
-import json
 
-# ---------------------------- PASSWORD GENERATOR ------------------------------- #
-def generate():
-    letter_list = string.ascii_letters + string.digits + '!@#$%^&*()_'
+# ---------------------------- CSV IMPORT ------------------------------- #
+try:
+    data = pandas.read_csv("./data/words_to_learn.csv")
+except:
+    data = pandas.read_csv("./data/french_words.csv")
+finally:
+    dictionary_data = data.to_dict(orient="records")
 
-    password_length = random.randint(10, 15)
-    password = [random.choice(letter_list) for char in range(password_length + 1)]
 
-    random.shuffle(password)
-    password = "".join(password)
+# ---------------------------- CONSTANTS ------------------------------- #
+BACKGROUND_COLOR = "#B1DDC6"
+current_card = random.choice(dictionary_data)
+flip_timer = ""
+
+# ---------------------------- HELPER FUNCTIONS ------------------------------- #
+
+def next_card():
+    global current_card, flip_timer
+
+    window.after_cancel(flip_timer)
+    current_card = random.choice(dictionary_data)
+    canvas.itemconfig(title, text="French", fill="black")
+    canvas.itemconfig(background_image, image=card_front_image)
+    canvas.itemconfig(word, text=current_card["French"], fill="black")
+    flip_timer = window.after(3000, flip_card)
+
+def flip_card():
+    canvas.itemconfig(title, text="English", fill="white")
+    canvas.itemconfig(background_image, image=card_back_image)
+    canvas.itemconfig(word, text=current_card["English"], fill="white")
     
-    pyperclip.copy(password)
-    password_input.delete(0, END)
-    password_input.insert(0,password)
-    
-# ---------------------------- SAVE PASSWORD ------------------------------- #
-def save():
-    website = website_input.get().strip()
-    email = email_input.get().strip()
-    password = password_input.get().strip()
-    new_data = {website: {
-                    "email": email,
-                    "password": password,
-            },
-        }
-    messagebox_message = "These are the details that are entered: \nEmail: " + email + "\nPassword: " + password + "\nIs it ok to save?"
-    
-    if len(website) == 0 or len(password) == 0 or len(email) == 0:
-        messagebox.showinfo(title="Oops", message="Please don't leave any fields empty!")
-        
-    else:
-        
-        answer = messagebox.askokcancel(title=website, message=messagebox_message)
-        
-        if answer:
-            try:
-                with open("data.json", mode="r") as file:
-                    data = json.load(file)
-            except:
-                with open("data.json", mode="w") as file:
-                    json.dump(new_data, file, indent=4)
-            else:
-                data.update(new_data)
-                with open("data.json", mode="w") as file:
-                    json.dump(data, file, indent=4)
-            finally:
-                website_input.delete(0, END)
-                password_input.delete(0, END)
-
-
-
-# ---------------------------- RETRIEVE PASSWORD ------------------------------- #
-def find_password():
-    website = website_input.get().strip()
+def is_known():
+    global data, dictionary_data
     
     try:
-        with open("data.json", "r") as file:
-            data = json.load(file)
-            website_data = data[website]
-            
-    except FileNotFoundError:
-        messagebox.showinfo(title="Oops", message="No Data File Found")
+        dictionary_data.remove(current_card)
+    except:
+        data = pandas.read_csv("./data/french_words.csv")
+        dictionary_data = data.to_dict(orient="records")
         
-    except KeyError:
-        messagebox.showinfo(title="Oops", message="No details for the website exists")
+    data = pandas.DataFrame(dictionary_data)
+    data.to_csv("./data/words_to_learn.csv", index=False)
     
-    else:
-        message_data = "Email: " + website_data["email"] + "\nPassword: " + website_data["password"]
-        pyperclip.copy(website_data["password"])
-        messagebox.showinfo(title=website, message=message_data)
-        
-
-
+    next_card()
+    
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
-window.title("Password Manager")
-window.config(padx=50, pady=50)
+window.title("Flash Cards")
+window.minsize(width=800, height=700)
+window.config(padx=50, pady=50, bg=BACKGROUND_COLOR)
 window.eval('tk::PlaceWindow . center')
 
-logo = PhotoImage(file="logo.png")
-canvas = Canvas(width=200, height=200, highlightthickness=0)
-canvas.create_image(100, 100, image=logo)
-canvas.grid(column=1, row=0)
+flip_timer = window.after(3000, flip_card)
 
+card_front_image = PhotoImage(file="./images/card_front.png")
+card_back_image = PhotoImage(file="./images/card_back.png")
+correct_image = PhotoImage(file="./images/right.png")
+incorrect_image = PhotoImage(file="./images/wrong.png")
 
-website_label = Label(text="Website:")
-website_label.grid(column=0, row=1)
+canvas = Canvas(width=800, height=526, bg=BACKGROUND_COLOR, highlightthickness=0)
+background_image = canvas.create_image(400, 263, image=card_front_image)
+title = canvas.create_text(400, 150, text="Title", fill="black", font=("Ariel", 40, "italic"))
+word = canvas.create_text(400, 263, text="Word", fill="black", font=("Ariel", 60, "bold"))
+canvas.grid(column=0, row=0, columnspan=2)
 
-website_input = Entry(width=21, justify="left")
-website_input.grid(column=1, row=1)
-website_input.focus()
+incorrect_button = Button(image=incorrect_image, highlightthickness=0, borderwidth=0, command=next_card)
+incorrect_button.grid(column=0, row=1)
 
-email_label = Label(text="Email/Username:")
-email_label.grid(column=0, row=2)
+correct_button = Button(image=correct_image, highlightthickness=0, borderwidth=0, command=is_known)
+correct_button.grid(column=1, row=1)
 
-email_input = Entry(width=36, justify="left")
-email_input.grid(column=1, row=2, columnspan=2)
-email_input.insert(0, "dummy@email.com")
-
-password_label = Label(text="Password:")
-password_label.grid(column=0, row=3)
-
-password_input = Entry(width=21, justify="left")
-password_input.grid(column=1, row=3, padx=12)
-
-search_button = Button(text="Search", width=11, command=find_password)
-search_button.grid(column=2, row=1)
-
-generate_pass_button = Button(text="Generate Password", width=11, command=generate)
-generate_pass_button.grid(column=2, row=3)
-
-add_button = Button(text="Add", width=36, command=save)
-add_button.grid(column=1, row=4, columnspan=2)
+next_card()
 
 window.mainloop()
