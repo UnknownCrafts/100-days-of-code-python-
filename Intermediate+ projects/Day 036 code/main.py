@@ -1,3 +1,5 @@
+# Stock market notifier using python
+
 import requests
 from twilio.rest import Client
 
