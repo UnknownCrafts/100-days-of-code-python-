@@ -38,11 +38,9 @@ day_before_yesterday_price = float(stock_data[stock_data_dates[1]]["5. adjusted 
 
 percent_change = 0
 arrow_type = "🔻"
-price_increased = False
 
 if yesterday_price >= day_before_yesterday_price:
     percent_change = round(((yesterday_price - day_before_yesterday_price)/day_before_yesterday_price)*100, 3)
-    price_increased = True
     arrow_type = "🔺"
 else:
     percent_change = round(((day_before_yesterday_price - yesterday_price)/day_before_yesterday_price)*100, 3)
