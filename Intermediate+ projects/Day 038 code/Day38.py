@@ -7,20 +7,26 @@ import re
 import nltk
 from nltk.tokenize import word_tokenize
 
+TODAYS_DATE = datetime.datetime.now().strftime("%d/%m/%Y")
+
+
+# def next_available_row(sheet, cols_to_sample=2):
+#   # looks for empty row based on values appearing in 1st N columns
+#   cols = sheet.range(1, 1, sheet.row_count, cols_to_sample)
+#   return max([cell.row for cell in cols if cell.value]) + 1
+
 #Google Sheets OAuth using google cloud
 gc = gspread.oauth(
     credentials_filename='credentials.json',
 )
 
-sh = gc.open("My Workouts (Python Controlled)")
-
-print(sh.sheet1.get('A1'))
-
+sh = gc.open("My Workouts (Python Controlled)").worksheet("workouts") # Change this as needed
+# row_to_write = next_available_row(sh, 5)
 
 
 # Download NLTK resources if not already available
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
 
 sentence = input("what did you do today? ")
 
@@ -66,6 +72,8 @@ if current_exercise:
 # Clean up the duration strings
 durations = [re.sub(r'for\s', '', duration) for duration in durations]
 
-# Example output
-print("Exercises:", exercises)
-print("Durations:", durations)
+
+# Append data to google sheet
+row_to_insert = [TODAYS_DATE, datetime.datetime.now().strftime("%X")," / ".join(exercises)," / ".join(durations)]
+
+sh.append_row(row_to_insert, value_input_option='USER_ENTERED')
