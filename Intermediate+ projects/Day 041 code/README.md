@@ -1,1 +1,0 @@
-This is the start of Web Foundation, kind of a subsection in my journey.
