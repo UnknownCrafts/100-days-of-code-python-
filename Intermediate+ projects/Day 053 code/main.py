@@ -12,6 +12,10 @@ load_dotenv()
 
 FORM = os.environ["GOOGLE_FORM"]
 LINK = os.environ["WEB_LINK"]
+header = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36",
+    "Accept-Language": "en-GB,en-US;q=0.9,en;q=0.8"
+}
 
 # Keep Chrome browser open after program finishes
 
@@ -22,7 +26,7 @@ driver = webdriver.Chrome(options=chrome_options)
 
 # Webscraping
 
-response = requests.get(LINK).text
+response = requests.get(LINK, headers=header).text
 soup = BeautifulSoup(response, "html.parser")
 listing_links = [x.get("href") for x in soup.find_all(name="a", class_="property-card-link")]
 listing_prices = [x.getText()[:6].strip("+") if "," in x.getText()[:6].strip("+") else "{}{}{}".format(x.getText()[:6].strip("+")[:2], ",", x.getText()[:6].strip("+")[2:]) 
