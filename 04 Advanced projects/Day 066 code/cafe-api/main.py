@@ -117,4 +117,4 @@ def closed_cafe(cafe_id):
         return jsonify(error={"Forbidden": "Sorry a cafe with that id was not found in the databse."}), 403
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

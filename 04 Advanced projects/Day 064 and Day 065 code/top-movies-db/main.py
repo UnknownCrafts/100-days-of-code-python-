@@ -114,4 +114,4 @@ def find_movie():
         return redirect(url_for("rate_movie", id=new_movie.id))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
