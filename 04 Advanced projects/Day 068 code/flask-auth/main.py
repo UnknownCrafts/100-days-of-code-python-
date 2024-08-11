@@ -24,17 +24,11 @@ db.init_app(app)
 # CREATE TABLE IN DB
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
     password: Mapped[str] = mapped_column(String(100))
     name: Mapped[str] = mapped_column(String(1000))
-    is_authenticated = False
-    is_active = False
-    is_anonymous = False
-    
-    def get_id():
-        return id
 
 
 with app.app_context():
@@ -42,17 +36,26 @@ with app.app_context():
     
 @login_manager.user_loader
 def load_user(id):
-    return User.get(id)
+    return db.get_or_404(User, id)
 
 
 @app.route('/')
 def home():
-    return render_template("index.html")
+    return render_template("index.html", logged_in=current_user.is_authenticated)
 
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+        
+        email = request.form.get('email')
+        result = db.session.execute(db.select(User).where(User.email == email))
+
+        user = result.scalar()
+        if user:
+            flash("You've already signed up with that email, log in instead!")
+            return redirect(url_for('login'))
+        
         new_user = User(
             email = request.form.get("email"),
             name = request.form.get("name"),
@@ -60,33 +63,41 @@ def register():
         )
         db.session.add(new_user)
         db.session.commit()
-        return render_template("secrets.html", name=new_user.name)
+        
+        login_user(new_user)
+        return render_template("secrets.html")
     
-    return render_template("register.html")
+    return render_template("register.html", logged_in=current_user.is_authenticated)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "POST":
-        user = User(
-            email = request.form.get("email"),
-            password = request.form.get("password"),
-            
-        )
-        login_user()
+        email = request.form.get('email')
+        password = request.form.get('password')
+        result = db.session.execute(db.select(User).where(User.email == email))
+        user = result.scalar()
+        
+        if not user or not check_password_hash(user.password, password):
+            flash("The Email or Password is incorrect.")
+            return redirect(url_for('login'))
+        else:
+            login_user(user)
+            return redirect(url_for('secrets'))
+        
     return render_template("login.html")
 
 
 @app.route('/secrets')
 @login_required
 def secrets():
-    return render_template("secrets.html")
+    return render_template("secrets.html", name=current_user.name, logged_in=current_user.is_authenticated)
 
 
 @app.route('/logout')
-@login_required
 def logout():
-    pass
+    logout_user()
+    return redirect(url_for('home'))
 
 
 @app.route('/download')
