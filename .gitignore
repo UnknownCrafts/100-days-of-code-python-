@@ -6,3 +6,7 @@ words_to_learn.csv
 credentials.json
 token.txt
 .venv
+*.db
+*.py[cod]
+.web
+assets/external/
