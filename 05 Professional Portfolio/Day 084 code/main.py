@@ -13,6 +13,8 @@ computer_symbol = ""
 
 symbols = ["O", "X"]
 
+player_turn = random.randint(0,1)
+
 grid = [["","",""],
         ["","",""],
         ["","",""]]
@@ -25,7 +27,7 @@ spot_to_grid = {
     "A3": "20",
     "B1": "01",
     "B2": "11",
-    "B3": "12",
+    "B3": "21",
     "C1": "02",
     "C2": "12",
     "C3": "22",
@@ -39,7 +41,7 @@ def clear_grid():
             ["","",""]]
     empty_spots = ["A1", "A2", "A3", "B1", "B2", "B3", "C1", "C2", "C3"]
 
-def print_grid() -> None:
+def print_grid():
     print("   A   B   C")
     for i in range(3):
         print(f"{i+1} {grid[i]}")
@@ -78,19 +80,95 @@ def input_validation():
             grid[int(chosen_spot[0])][int(chosen_spot[1])] = player_symbol
             index = empty_spots.index(player_input)
             empty_spots[index] = ""
+        else:
+            print("Please choose a valid spot!")
 
 def choose_random():
-    chosen_symb = ""
-    while empty_spots.count("") <= 9 and chosen_symb == "":
-        chosen_symb = random.choice(empty_spots)
-    chosen_spot = spot_to_grid[chosen_symb]
-    print(f"Computer has chosen: {chosen_symb}\n")
-    grid[int(chosen_spot[0])][int(chosen_spot[1])] = computer_symbol
-    index = empty_spots.index(chosen_symb)
-    empty_spots[index] = ""
+    if empty_spots.count("") < 9:
+        chosen_symb = ""
+        while chosen_symb == "":
+            chosen_symb = random.choice(empty_spots)
+        chosen_spot = spot_to_grid[chosen_symb]
+        print(f"Computer has chosen: {chosen_symb}\n")
+        grid[int(chosen_spot[0])][int(chosen_spot[1])] = computer_symbol
+        index = empty_spots.index(chosen_symb)
+        empty_spots[index] = ""
+        
+def win_check():
+    global player_win, computer_win, is_running, first_run, player_turn
+    
+    chosen_symbols = [player_symbol, computer_symbol]
+    
+    for symbol in chosen_symbols:
+        if symbol == grid[0][0] and symbol == grid[0][1] and symbol == grid[0][2]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        elif symbol == grid[1][0] and symbol == grid[1][1] and symbol == grid[1][2]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        elif symbol == grid[2][0] and symbol == grid[2][1] and symbol == grid[2][2]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        elif symbol == grid[0][0] and symbol == grid[1][0] and symbol == grid[2][0]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        elif symbol == grid[0][1] and symbol == grid[1][1] and symbol == grid[2][1]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        elif symbol == grid[0][2] and symbol == grid[1][2] and symbol == grid[2][2]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        elif symbol == grid[0][0] and symbol == grid[1][1] and symbol == grid[2][2]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        elif symbol == grid[0][2] and symbol == grid[1][1] and symbol == grid[2][0]:
+            if symbol == player_symbol:
+                player_win = True
+            else:
+                computer_win = True
+            is_running = False
+        
+        if computer_win:
+            print("You lose, computer won!")
+        elif player_win:
+            print("You win!")
+        elif not computer_win and not player_win and not is_running:
+            print("It's a tie")
+        
+        if not is_running:
+            play_again_input = input("Would you like to play again?(type Yes or Y) ").lower()
+            if play_again_input == "yes" or play_again_input == "y":
+                clear_grid()
+                player_win = False
+                computer_win = False
+                is_running = True
+                first_run = True
+                player_turn = random.randint(0,1)
+            else:
+                print("Thank you for playing!")
 
 print("Welcome to Tic Tac Toe")
-player_turn = random.randint(0,1)
 while is_running:
     if first_run:
         assign_symbols()
@@ -115,3 +193,4 @@ while is_running:
         choose_random()
         print_grid()
         player_turn = True
+    win_check()
