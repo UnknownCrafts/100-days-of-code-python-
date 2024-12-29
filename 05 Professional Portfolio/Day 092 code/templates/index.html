@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block content %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+<div class="jumbotron text-center">
+  {% if image_data != None %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <img src="data:image/jpeg;base64, {{ image_data["image_bytes"] }}" style="width: 300px;"/>
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Color</th>
+                <th scope="col">Color Code</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for color in image_data["colors"] %}
+                <tr>
+                  <div class="color">
+                    <th scope="row" style="background-color:{{ color }};"></th>
+                  </div>
+                  <td>{{ color }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="container">
+      <h1 class="display-4">Image Colour Palette Generator</h1>
+      <p class="lead">Want top 10 most common colours in your image?</p>
+      <hr class="my-4">
+      <div class="form">
+        {{ render_form(form, novalidate=True) }}
+      </div>
+  </div>
+</div>
+
+{% endblock %}

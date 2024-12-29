@@ -39,14 +39,14 @@ def saveAsAudio(text, file_name):
         voice="alloy",
         input=text
     )
-    response.stream_to_file(savepath + file_name)
+    response.stream_to_file(savepath + file_name + ".mp3")
 
 def retrieveInput():
     global filepath
     if filepath != "":
         for file in filepath:
             file_text = getText(file)
-            file_name = file.split("/")[-1]
+            file_name = file.split("/")[-1].split(".")[0]
             saveAsAudio(file_text, file_name)
     root.destroy()
 
