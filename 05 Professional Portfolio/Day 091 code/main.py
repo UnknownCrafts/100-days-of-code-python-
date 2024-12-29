@@ -46,7 +46,7 @@ def retrieveInput():
     if filepath != "":
         for file in filepath:
             file_text = getText(file)
-            file_name = file.split("/")[-1].split(".")[0]
+            file_name = file.split("/")[-1].strip(".pdf")
             saveAsAudio(file_text, file_name)
     root.destroy()
 
