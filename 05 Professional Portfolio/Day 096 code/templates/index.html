@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% block content %}
+{% from 'bootstrap5/form.html' import render_form %}
+
+<div class="jumbotron text-center">
+  <div class="container">
+      <h1 class="display-4">Get Wasted Here</h1>
+      <p class="lead">Want to visit a random brewery to have a good time?</p>
+      <hr class="my-4">
+      <div class="form">
+        {{ render_form(form, novalidate=True) }}
+      </div>
+  </div>
+  {% if brewery != None %}
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Address</th>
+                <th scope="col">Country</th>
+                <th scope="col">Website</th>
+                <th scope="col">Phone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                  <th scope="row">{{ brewery["name"]}}</th>
+                  <td>{{ brewery["brewery_type"] }}</td>
+                  <td><a href=" {{ brewery['maps_link']}} ">{{ brewery["address_1"] }}</a></td>
+                  <td>{{ brewery["country"] }}</td>
+                  {% if brewery['website_url'] == None %}
+                    <td>Nope</td>
+                  {% else %}
+                    <td><a href=" {{ brewery['website_url']}} ">{{ brewery['website_url']}}</a></td>
+                  {% endif %}
+
+                  {% if brewery['phone'] == None %}
+                    <td>Nope</td>
+                  {% else %}
+                    <td>{{ brewery["phone"] }}</td>
+                  {% endif %}
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}
