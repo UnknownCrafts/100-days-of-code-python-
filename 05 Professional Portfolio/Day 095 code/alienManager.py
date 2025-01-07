@@ -26,9 +26,9 @@ class AlienManager(Turtle):
         for pose in INIT_ALIEN_POSES:
             if pose == "Marker":
                 self.left_marker = Alien(position=self.starting_tile_position)
-                
+                self.left_marker.hideturtle()
                 self.right_marker = Alien(position=(-110, 210))
-                
+                self.right_marker.hideturtle()
                 self.aliens.append(self.left_marker)
                 self.aliens.append(self.right_marker)
             
@@ -88,6 +88,7 @@ class AlienManager(Turtle):
             if current_alien_pose != "classic":
                 if alien.distance(player.bullet) < 24:
                     alien.goto(1000,1000)
+                    alien.resetBullet()
                     player.resetBullet()
                     rm_alien_index = i
                     self.total_aliens -= 1
